@@ -5,9 +5,13 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,24 +54,12 @@ public class vkMsgTest {
         passwordField.sendKeys(cfg.password());
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"login_button\"]"));
         loginButton.click();
-        try {
-
-            TimeUnit.SECONDS.sleep(5);  //wait 5 second(s)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         //Блок поиска нужного человека
         WebElement msgButton = driver.findElement(By.xpath("//*[@id=\"l_fr\"]/a/span/span[2]"));
         msgButton.click();
         WebElement searchField = driver.findElement(By.id("s_search"));
         searchField.sendKeys("Анна Сергеевна");
-        try {
-
-            TimeUnit.SECONDS.sleep(2);  //wait 2 second(s)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Блок отправки сообщения, клик на "написать" +текс + "отправить"
         WebElement writeMsgButtom = driver.findElement(By.xpath("//*[@id=\"friends_user_row363738874\"]/div[4]/a"));
@@ -76,18 +68,18 @@ public class vkMsgTest {
         msgField.sendKeys("test" + " " + number);
         WebElement sendMsgButtom = driver.findElement(By.id("mail_box_send"));
         sendMsgButtom.click();
-        try {
-
-            TimeUnit.SECONDS.sleep(2);  //wait 2 second(s)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @After
     public void tearDown() {
-        WebElement menuUser = driver.findElement(By.xpath("//*[@id=\"top_profile_link\"]/img"));
+        (new WebDriverWait(driver, 3))
+                .until(ExpectedConditions.invisibilityOfElementLocated(By.id("box_layer_wrap")));
+        (new WebDriverWait(driver, 3))
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id=\"top_profile_link\"]")));
+        WebElement menuUser = driver.findElement(By.xpath("//a[@id=\"top_profile_link\"]"));
         menuUser.click();
+        (new WebDriverWait(driver, 3))
+                .until(ExpectedConditions.elementToBeClickable(By.id("top_logout_link")));
         WebElement logoutButton = driver.findElement(By.id("top_logout_link"));
         logoutButton.click();
         driver.quit();
