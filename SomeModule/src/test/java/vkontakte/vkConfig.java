@@ -1,4 +1,4 @@
-package Vkontakte;
+package vkontakte;
 import org.aeonbits.owner.Config;
 
 @Config.Sources({
