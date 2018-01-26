@@ -54,17 +54,18 @@ public class VkMsgTest {
     @Test
     public void loginSendLogout() {
         //Блок авторизации
-        WebElement loginField = driver.findElement(By.id("email"));
+        WebElement loginField = driver.findElement(By.xpath("//input[@id=\"email\"]"));
         loginField.sendKeys(cfg.login());
-        WebElement passwordField = driver.findElement(By.id("pass"));
+        WebElement passwordField = driver.findElement(By.xpath("//input[@id=\"pass\"]"));
         passwordField.sendKeys(cfg.password());
-        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"login_button\"]"));//переписать
+        WebElement loginButton = driver.findElement(By.xpath("//div[@class=\"login_buttons_wrap\"]" +
+                "//button[contains(@id, 'login_button')]"));
         loginButton.click();
 
         //Блок поиска нужного юзера
-        WebElement msgButton = driver.findElement(By.xpath("//*[@id=\"l_fr\"]/a/span/span[2]"));//переписать
+        WebElement msgButton = driver.findElement(By.xpath("//li[contains(@id,'l_fr')]"));
         msgButton.click();
-        WebElement searchField = driver.findElement(By.id("s_search"));//переписать
+        WebElement searchField = driver.findElement(By.xpath("//input[@id=\"s_search\"]"));
         searchField.sendKeys(cfg.userName());
 
         // Блок отправки сообщения, клик "написать" -> пишем -> клик "отправить"
@@ -76,26 +77,26 @@ public class VkMsgTest {
                 ("//div[contains(@class, 'friends_user_row') and contains(., '%s')]" +
                         "//a[@class='friends_field_act']", cfg.userName())));
         writeMsgButtom.click();
-        WebElement msgField = driver.findElement(By.xpath("//*[@id=\"mail_box_editable\"]"));//переписать
+        WebElement msgField = driver.findElement(By.xpath("//div[@id=\"mail_box_editable\"]"));
         msgField.sendKeys("test №" + " " + number + " " + ts);
-        WebElement sendMsgButtom = driver.findElement(By.id("mail_box_send"));//переписать
+        WebElement sendMsgButtom = driver.findElement(By.xpath("//button[@id=\"mail_box_send\"]"));
         sendMsgButtom.click();
 
         //Блок Проверки что сообщение отправилось
         driver.get("https://vk.com/im?media=&sel=" + cfg.userId()); //Грязный хак
         assertThat(driver.findElement(By.xpath(format
-                ("//div[contains(@class, 'im-mess-stack')]//div[contains(@class, 'im-mess--text') and contains(., '%s')]"
-                        , ts))).getText()).matches("test №" + " " + number + " " + ts);
+                ("//div[contains(@class, 'im-mess-stack')]//div[contains(@class, 'im-mess--text') " +
+                                "and contains(., '%s')]", ts))).getText()).matches("test №" + " " + number + " " + ts);
         System.out.println("Ура тест пройден" + ";" + "Test completed, yeah");
 
         //Блок логаута
         (new WebDriverWait(driver, 3))
-                .until(ExpectedConditions.invisibilityOfElementLocated(By.id("box_layer_wrap")));//переписать
+                .until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id=\"box_layer_wrap\"]")));
         (new WebDriverWait(driver, 3))
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id=\"top_profile_link\"]")));//переписать
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@id=\"top_profile_link\"]")));
         WebElement menuUser = driver.findElement(By.xpath("//a[@id=\"top_profile_link\"]"));
         menuUser.click();
-        WebElement logoutButton = driver.findElement(By.id("top_logout_link"));//переписать
+        WebElement logoutButton = driver.findElement(By.xpath("//a[@id=\"top_logout_link\"]"));
         logoutButton.click();
         (new WebDriverWait(driver, 3)).until(ExpectedConditions.visibilityOfElementLocated(By
                 .id("top_reg_link"))); //Проверяем, что действительно разлогинились
