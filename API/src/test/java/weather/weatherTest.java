@@ -30,8 +30,6 @@ public class weatherTest {
         return Arrays.asList(data);
     }
 
-
-
     @Test
     public void checkCity() {
                 when()
