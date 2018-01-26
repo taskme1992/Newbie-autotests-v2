@@ -38,6 +38,5 @@ public class weatherTest {
                 .then()
                 .statusCode(200)
                 .body("name", is(expCity),"sys.country", is(expCountry));
-
     }
 }
