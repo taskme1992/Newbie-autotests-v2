@@ -13,4 +13,102 @@
         <module>API</module>
     </modules>
 
-   </project>
+    <properties>
+        <aspectj.version>1.8.10</aspectj.version>
+        <allure.version>1.5.4</allure.version>
+        <allureBETA.version>2.0-BETA15</allureBETA.version>
+    </properties>
+
+    <dependencies>
+    <!--ALLURE-->
+    <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-junit4</artifactId>
+        <version>${allureBETA.version}</version>
+    </dependency>
+    <!-- без этой херни не работает -->
+    <!--<dependency>-->
+    <!--<groupId>javax.xml.bind</groupId>-->
+    <!--<artifactId>jaxb-api</artifactId>-->
+    <!--<version>2.3.0</version>-->
+    <!--</dependency>-->
+    <!---->
+    <!--<dependency>-->
+    <!--<groupId>ru.yandex.qatools.allure</groupId>-->
+    <!--<artifactId>allure-junit-adaptor</artifactId>-->
+    <!--<version>${allure.version}</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.aspectj</groupId>-->
+    <!--<artifactId>aspectjweaver</artifactId>-->
+    <!--<version>${aspectj.version}</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>io.qameta.allure</groupId>-->
+    <!--<artifactId>allure-junit4-aspect</artifactId>-->
+    <!--<version>${allureBETA.version}</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>io.qameta.allure</groupId>-->
+    <!--<artifactId>allure-java-commons</artifactId>-->
+    <!--<version>${allureBETA.version}</version>-->
+    <!--</dependency>-->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!--&lt;!&ndash; Плагин из доки maven-surefire &ndash;&gt;-->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-surefire-plugin</artifactId>-->
+            <!--<version>2.20</version>-->
+            <!--<configuration>-->
+
+            <!--<systemProperties>-->
+            <!--<property>-->
+            <!--<name>allure.results.directory</name>-->
+            <!--<value>${project.build.directory}/allure-results</value>-->
+            <!--</property>-->
+            <!--</systemProperties>-->
+
+            <!--<testFailureIgnore>false</testFailureIgnore>-->
+            <!--<argLine>-->
+            <!-- -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
+            <!--</argLine>-->
+            <!--<properties>-->
+            <!--<property>-->
+            <!--<name>listener</name>-->
+            <!--<value>io.qameta.allure.junit4.AllureJunit4</value>-->
+            <!--</property>-->
+            <!--</properties>-->
+            <!--</configuration>-->
+            <!--<dependencies>-->
+            <!--<dependency>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<artifactId>aspectjweaver</artifactId>-->
+            <!--<version>${aspectj.version}</version>-->
+            <!--</dependency>-->
+            <!--</dependencies>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
+    <!--<reporting>-->
+    <!--<excludeDefaults>true</excludeDefaults>-->
+    <!--<plugins>-->
+    <!--<plugin>-->
+    <!--<groupId>ru.yandex.qatools.allure</groupId>-->
+    <!--<artifactId>allure-maven-plugin</artifactId>-->
+    <!--<version>2.6</version>-->
+    <!--</plugin>-->
+    <!--</plugins>-->
+    <!--</reporting>-->
+</project>
