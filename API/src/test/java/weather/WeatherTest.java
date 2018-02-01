@@ -13,12 +13,12 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(Parameterized.class)
 
-public class weatherTest {
+public class WeatherTest {
     private int idCity;
     private String expCity;
     private String expCountry;
 
-    public weatherTest(int idCity, String expCity, String expCountry) {
+    public WeatherTest(int idCity, String expCity, String expCountry) {
         this.idCity = idCity;
         this.expCity = expCity;
         this.expCountry = expCountry;
