@@ -1,5 +1,6 @@
 package vkontakte;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -12,17 +13,36 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.assertj.core.api.Assertions.assertThat;
-//import io.qameta.allure.*;
+
+import io.qameta.allure.*;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+
 import static java.lang.String.format;
 
 @RunWith(Parameterized.class)
 
 public class VkMsgTest {
+    private WebDriver driver;
+    private int number;
+
+    public VkMsgTest(int number) {
+        this.number = number;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        Object[][] data = new Object[][]{{1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}};
+        return Arrays.asList(data);
+
+    }
+
+    Timestamp ts = new Timestamp(System.currentTimeMillis());
+    private VkConfig cfg = ConfigFactory.create(VkConfig.class);
+
     @Before
     public void start() {
         driver = new ChromeDriver();
@@ -31,34 +51,19 @@ public class VkMsgTest {
         driver.get("https://vk.com/login");
     }
 
-    @After
-    public void exit() {
-        driver.quit();
-    }
-
-    public VkMsgTest(int number) {
-        this.number = number;
-    }
-
-    private WebDriver driver;
-    private int number;
-    Timestamp ts = new Timestamp(System.currentTimeMillis());
-    private VkConfig cfg = ConfigFactory.create(VkConfig.class);
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        Object[][] data = new Object[][]{{1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}};
-        return Arrays.asList(data);
-    }
-
+    @Description("Тест отправки сообщения ВК")
+    @DisplayName("Отправка сообщения ВК указанному юзеру")
     @Test
-//    public void somesteps (){
-//        loginSendLogout();
-//        step2();
-//    }
-//
-//    @Step("Название шага1")
-    public void loginSendLogout() {
+    public void allSteps() {
+        login();
+        searchUser();
+        sendMsg();
+        checkMsg();
+        logOut();
+    }
+
+    @Step("Авторизация")
+    public void login() {
         //Блок авторизации
         WebElement loginField = driver.findElement(By.xpath("//input[@id=\"email\"]"));
         loginField.sendKeys(cfg.login());
@@ -67,15 +72,19 @@ public class VkMsgTest {
         WebElement loginButton = driver.findElement(By.xpath("//div[@class=\"login_buttons_wrap\"]" +
                 "//button[contains(@id, 'login_button')]"));
         loginButton.click();
-//    }
-//    @Step("shag 2")
-//    public void step2(){
+    }
+
+    @Step("Поиск юзера")
+    public void searchUser() {
         //Блок поиска нужного юзера
         WebElement msgButton = driver.findElement(By.xpath("//li[contains(@id,'l_fr')]"));
         msgButton.click();
         WebElement searchField = driver.findElement(By.xpath("//input[@id=\"s_search\"]"));
         searchField.sendKeys(cfg.userName());
+    }
 
+    @Step("Отправка сообщения")
+    public void sendMsg() {
         // Блок отправки сообщения, клик "написать" -> пишем -> клик "отправить"
         (new WebDriverWait(driver, 3))
                 .until(ExpectedConditions.elementToBeClickable(By.xpath(format
@@ -89,14 +98,20 @@ public class VkMsgTest {
         msgField.sendKeys("test №" + " " + number + " " + ts);
         WebElement sendMsgButtom = driver.findElement(By.xpath("//button[@id=\"mail_box_send\"]"));
         sendMsgButtom.click();
+    }
 
+    @Step("Проверка что сообщение отправилось")
+    public void checkMsg() {
         //Блок Проверки что сообщение отправилось
         driver.get("https://vk.com/im?media=&sel=" + cfg.userId()); //Грязный хак
         assertThat(driver.findElement(By.xpath(format
                 ("//div[contains(@class, 'im-mess-stack')]//div[contains(@class, 'im-mess--text') " +
                         "and contains(., '%s')]", ts))).getText()).matches("test №" + " " + number + " " + ts);
-        System.out.println("Ура тест пройден" + ";" + "Test completed, yeah");
+        System.out.println("Test completed, yeah");
+    }
 
+    @Step("Выход")
+    public void logOut() {
         //Блок логаута
         (new WebDriverWait(driver, 3))
                 .until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id=\"box_layer_wrap\"]")));
@@ -108,5 +123,10 @@ public class VkMsgTest {
         logoutButton.click();
         (new WebDriverWait(driver, 3)).until(ExpectedConditions.visibilityOfElementLocated(By
                 .id("top_reg_link"))); //Проверяем, что действительно разлогинились
+    }
+
+    @After
+    public void exit() {
+        driver.quit();
     }
 }
